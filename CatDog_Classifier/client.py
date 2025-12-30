@@ -60,12 +60,12 @@ def download_images_from_api(animal, count, save_dir):
                     paths.append(filepath)
                     downloaded += 1
                 except Exception as e:
-                    print(f"⚠️ Failed to download {img_url}: {e}")
-                time.sleep(0.3)  # Be polite
+                    print(f" Failed to download {img_url}: {e}")
+                time.sleep(0.3)
 
             page += 1
         except Exception as e:
-            print(f"❌ API request failed for {animal}: {e}")
+            print(f" API request failed for {animal}: {e}")
             break
 
     return paths
@@ -73,7 +73,7 @@ def download_images_from_api(animal, count, save_dir):
 def prompt_and_download():
     """Ask user how many cats/dogs to download, then download them"""
     root = tk.Tk()
-    root.withdraw()  # Hide main window temporarily
+    root.withdraw() 
 
     try:
         cat_num = simpledialog.askinteger("Input", "How many CAT images to download?", minvalue=0, maxvalue=100)
@@ -107,9 +107,9 @@ def prompt_and_download():
 print("Loading model...")
 try:
     model = load_model(MODEL_PATH)
-    print("✅ Model loaded successfully!")
+    print("Model loaded successfully!")
 except Exception as e:
-    print(f"❌ Error loading model: {e}")
+    print(f"Error loading model: {e}")
     messagebox.showerror("Error", f"Failed to load model:\n{e}")
     sys.exit(1)
 
@@ -133,7 +133,7 @@ class CatDogClassifierApp:
         self.current_index = 0
         self.root.title("AI Image Classifier (Auto-downloaded Test Set)")
         self.root.geometry("800x600")
-        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)  # Handle close event
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing) 
 
         self.setup_ui()
         if self.image_paths:
@@ -144,9 +144,9 @@ class CatDogClassifierApp:
         try:
             if os.path.exists(TEMP_DIR):
                 shutil.rmtree(TEMP_DIR)
-                print(f"🗑️ Temporary folder '{TEMP_DIR}' deleted.")
+                print(f" Temporary folder '{TEMP_DIR}' deleted.")
         except Exception as e:
-            print(f"⚠️ Failed to delete temp folder: {e}")
+            print(f" Failed to delete temp folder: {e}")
         self.root.destroy()
         os._exit(0)
 
@@ -157,7 +157,7 @@ class CatDogClassifierApp:
     def setup_ui(self):
         header = tk.Frame(self.root)
         header.pack(fill=tk.X, padx=10, pady=5)
-        tk.Label(header, text=f"📁 Testing on {len(self.image_paths)} auto-downloaded images", fg="gray").pack()
+        tk.Label(header, text=f"Testing on {len(self.image_paths)} auto-downloaded images", fg="gray").pack()
 
         body = tk.Frame(self.root)
         body.pack(fill=tk.BOTH, expand=True, padx=10)
@@ -226,13 +226,11 @@ class CatDogClassifierApp:
 
 # ------------------ Main Execution ------------------
 if __name__ == '__main__':
-    # Step 1: Ask user & download images
     image_list = prompt_and_download()
     if not image_list:
         print("No images to process. Exiting.")
         sys.exit(0)
 
-    # Step 2: Launch GUI
     root = tk.Tk()
     app = CatDogClassifierApp(root, image_list)
     root.mainloop()
