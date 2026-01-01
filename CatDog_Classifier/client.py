@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # ------------------ Configuration ------------------
-MODEL_PATH = 'E:\\code\\py\\mL\\cat and dog\\cat_dog_model.keras'
+MODEL_PATH = 'cat_dog_model.keras'
 IMG_SIZE = (128, 128)
 SUPPORTED_EXTS = ('.jpg', '.jpeg', '.png', '.bmp', '.gif')
 TEMP_DIR = "testing"

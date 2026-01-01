@@ -1,0 +1,9 @@
+# 训练图片路径
+train: E:\\code\\py\\mL\\CaptureScreen\\dataset\\images
+val: E:\\code\\py\\mL\\CaptureScreen\\dataset\\images
+
+# 类别数量
+nc: 1
+
+# 类别名称列表
+names: ["aimlab_blueball"]   # 你的 class 名称
