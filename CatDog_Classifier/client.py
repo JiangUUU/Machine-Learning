@@ -18,9 +18,8 @@ from PyQt6.QtCore import Qt
 
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-# ----------------------------
-# 从本地测试集采样图片（替代下载）
-# ----------------------------
+
+
 def sample_test_images(cls_name, num):
     """
     从本地测试集采样指定数量的图片路径
@@ -40,21 +39,15 @@ def sample_test_images(cls_name, num):
     if not all_files:
         raise FileNotFoundError(f"No images found in {folder}")
     
-    # 随机采样（若 num > 总数，则取全部）
     selected = random.sample(all_files, min(num, len(all_files)))
     return selected
 
-# ----------------------------
-# 加载模型（保持不变）
-# ----------------------------
+
 model = timm.create_model("vit_base_patch16_224", pretrained=False, num_classes=2)
 model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
 model.eval()
 model.to(device)
 
-# ----------------------------
-# 预测函数（保持不变）
-# ----------------------------
 transform = transforms.Compose([
     transforms.Resize((224,224)),
     transforms.ToTensor()
@@ -69,9 +62,7 @@ def predict_image(img_path):
         pred_idx = probs.argmax()
     return "cats" if pred_idx == 0 else "dogs", probs[pred_idx]
 
-# ----------------------------
-# ImageViewer（保持不变）
-# ----------------------------
+
 class ImageViewer(QWidget):
     def __init__(self, image_paths):
         super().__init__()
@@ -128,9 +119,7 @@ class ImageViewer(QWidget):
         self.index = (self.index - 1) % len(self.image_paths)
         self.update_image()
 
-# ----------------------------
-# DownloadUI → 改名为 SamplerUI（逻辑变更）
-# ----------------------------
+
 class SamplerUI(QWidget):
     def __init__(self):
         super().__init__()
