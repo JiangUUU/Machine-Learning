@@ -1,7 +1,5 @@
-MODEL is not uploaded , run vitcatdog.py and kerascatdog.py to generate model respectively.
+edit config.py, set environment
 
-Keras model is written by myself,it perform worse than vit.
-
-
+RUN client.py ,automatically choose picture from test_set and predict
 
 

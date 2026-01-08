@@ -113,7 +113,7 @@ def train_model(train_path, val_path, epochs):
         min_lr=1e-8
     )
     checkpoint = callbacks.ModelCheckpoint(
-        filepath="model/cat_dog_model.keras",
+        filepath="../model/cat_dog_model.keras",
         monitor="val_loss",
         save_best_only=True
     )
