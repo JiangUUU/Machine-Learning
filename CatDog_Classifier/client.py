@@ -1,9 +1,8 @@
 from config import MODEL_PATH, TESTSET_PATH
 import os
 import sys
-from PIL import Image  
-import random  
-from pathlib import Path  
+from PIL import Image
+import random
 import torch
 import torch.nn.functional as F
 from torchvision import transforms
@@ -15,43 +14,38 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 
-
-
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-
 def sample_test_images(cls_name, num):
-    """
-    从本地测试集采样指定数量的图片路径
-    cls_name: "cats" 或 "dogs"
-    返回: 路径列表（直接使用原图，不复制）
-    """
+    # load image from local test set
     if cls_name not in ["cats", "dogs"]:
         raise ValueError("cls_name must be 'cats' or 'dogs'")
-    
+
     folder = os.path.join(TESTSET_PATH, cls_name)
     if not os.path.exists(folder):
         raise FileNotFoundError(f"Test folder not found: {folder}")
-    
+
     all_files = [os.path.join(folder, f) for f in os.listdir(folder)
                  if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
-    
+
     if not all_files:
         raise FileNotFoundError(f"No images found in {folder}")
-    
+
     selected = random.sample(all_files, min(num, len(all_files)))
     return selected
 
 
-model = timm.create_model("vit_base_patch16_224", pretrained=False, num_classes=2)
+model = timm.create_model("vit_base_patch16_224",
+                          pretrained=False, num_classes=2)
 model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
 model.eval()
 model.to(device)
 
 transform = transforms.Compose([
-    transforms.Resize((224,224)),
+    transforms.Resize((224, 224)),
     transforms.ToTensor()
 ])
+
 
 def predict_image(img_path):
     img = Image.open(img_path).convert("RGB")
@@ -107,7 +101,7 @@ class ImageViewer(QWidget):
         path = self.image_paths[self.index]
         pixmap = QPixmap(path)
         self.label_img.setPixmap(pixmap)
-        
+
         pred, prob = predict_image(path)
         self.label_result.setText(f"Prediction: {pred} ({prob*100:.2f}%)")
 
@@ -129,29 +123,30 @@ class SamplerUI(QWidget):
         self.spin_cats = QSpinBox()
         self.spin_cats.setRange(0, 100)
         self.spin_cats.setValue(5)
-        
+
         self.spin_dogs = QSpinBox()
         self.spin_dogs.setRange(0, 100)
         self.spin_dogs.setValue(5)
-        
+
         btn_sample = QPushButton("Sample & Classify")
         btn_sample.clicked.connect(self.start_sampling)
-        
+
         form_layout = QFormLayout()
         form_layout.addRow("Number of Cats:", self.spin_cats)
         form_layout.addRow("Number of Dogs:", self.spin_dogs)
         form_layout.addRow(btn_sample)
-        
+
         self.setLayout(form_layout)
 
     def start_sampling(self):
         cat_num = self.spin_cats.value()
         dog_num = self.spin_dogs.value()
-        
+
         if cat_num == 0 and dog_num == 0:
-            QMessageBox.warning(self, "Warning", "Please select at least one image!")
+            QMessageBox.warning(
+                self, "Warning", "Please select at least one image!")
             return
-        
+
         all_images = []
         try:
             if cat_num > 0:
@@ -161,24 +156,24 @@ class SamplerUI(QWidget):
                 dog_paths = sample_test_images("dogs", dog_num)
                 all_images.extend(dog_paths)
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to load test images:\n{str(e)}")
+            QMessageBox.critical(
+                self, "Error", f"Failed to load test images:\n{str(e)}")
             return
 
         if not all_images:
-            QMessageBox.warning(self, "Warning", "No images found in test set!")
+            QMessageBox.warning(
+                self, "Warning", "No images found in test set!")
             return
-        
+
         # 打乱顺序（可选，让猫狗混合显示）
         random.shuffle(all_images)
-        
+
         self.viewer = ImageViewer(all_images)
         self.viewer.show()
         self.close()
 
-# ----------------------------
-# 启动应用
-# ----------------------------
-app = QApplication(sys.argv)
-window = SamplerUI()
-window.show()
-app.exec()
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = SamplerUI()
+    window.show()
+    app.exec()

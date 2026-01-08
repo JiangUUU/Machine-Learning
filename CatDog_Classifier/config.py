@@ -10,4 +10,3 @@ TESTSET_PATH = os.path.join(BASE_DIR, "dataset", "catdog","test_set")
 TRAININGSET_PATH = os.path.join(BASE_DIR, "dataset", "catdog","training_set")
 
 LOG_PATH = os.path.join(BASE_DIR, "CatDog_Classifier", "vitlog")
-
