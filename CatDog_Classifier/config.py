@@ -1,7 +1,8 @@
 # config.py
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = "E:\\code\\py\\mL\\"
 
 MODEL_PATH = os.path.join(BASE_DIR, "model", "vit_cat_dog.pth")
 

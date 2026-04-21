@@ -21,7 +21,6 @@ train_transform = transforms.Compose([
     transforms.ToTensor(),
 ])
 
-
 test_transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -54,9 +53,8 @@ for name, param in model.named_parameters():
 
 model = model.to(device)
 
-# =========================
-# 3️⃣ 损失函数 + 优化器
-# =========================
+
+# loss function
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.AdamW(
     filter(lambda p: p.requires_grad, model.parameters()), lr=1e-4)
